@@ -1,0 +1,507 @@
+﻿
+NAME
+    Set-AdmObject
+    
+SYNOPSIS
+    Modifies an Active Directory object.
+    
+    
+SYNTAX
+    Set-AdmObject [-Identity] <Object> [-Add <hashtable>] [-Clear <string[]>] [-Description <string>] 
+    [-DisplayName <string>] [-ProtectedFromAccidentalDeletion <System.Nullable[bool]>] [-Remove <hashtable>] 
+    [-Replace <hashtable>] [-AdaxesService <string>] [-Credential <PSCredential>] [-Partition <string>] 
+    [-PassThru <switch>] [-Server <string>] [-Confirm] [-WhatIf] [<CommonParameters>]
+    
+    Set-AdmObject -Instance <AdmObject> [-AdaxesService <string>] [-Credential <PSCredential>] [-Partition 
+    <string>] [-PassThru <switch>] [-Server <string>] [-Confirm] [-WhatIf] [<CommonParameters>]
+    
+    
+DESCRIPTION
+    The Set-AdmObject cmdlet modifies the properties of an Active Directory object. You can modify commonly used 
+    property values by using the cmdlet parameters. Property values that are not associated with cmdlet 
+    parameters can be modified by using the Add, Replace, Clear and Remove parameters.
+    
+    The Identity parameter specifies the Active Directory object to modify. You can identify an object by its 
+    distinguished name (DN) or GUID. You can also set the Identity parameter to an object variable such as 
+    $<localObject>, or you can pass an object through the pipeline to the Identity parameter. For example, you 
+    can use the Get-AdmObject cmdlet to retrieve an object and then pass the object through the pipeline to the 
+    Set-AdmObject cmdlet.
+    
+    The Instance parameter provides a way to update an object by applying the changes made to a copy of the 
+    object. When you set the Instance parameter to a copy of an Active Directory object that has been modified, 
+    the Set-AdmObject cmdlet makes the same changes to the original object. To get a copy of the object to 
+    modify, use the Get-AdmObject object. The Identity parameter is not allowed when you use the Instance 
+    parameter. For more information about the Instance parameter, see the Instance parameter description. 
+    
+    The following examples show how to modify the DisplayName property of an object by using three methods:
+    -By specifying the Identity and the DisplayName parameters
+    -By passing an object through the pipeline and specifying the DisplayName parameter
+    -By specifying the Instance parameter.
+    
+    Method 1: Modify the DisplayName property for the SecurityLevel2AccessGroup object by using the Identity and 
+    DisplayName parameters.
+    
+    Set-AdmObject -Identity "SecurityLevel2AccessGroup" -DisplayName "Security Level 2"
+    
+    Method 2: Modify the DisplayName property for the SecurityLevel2AccessGroup object by passing the 
+    SecurityLevel2AccessGroup object through the pipeline and specifying the DisplayName parameter.
+    
+    Get-AdmObject -Identity "SecurityLevel2AccessGroup" | Set-AdmObject -DisplayName "Security Level 2"
+    
+    Method 3: Modify the DisplayName property for the SecurityLevel2AccessGroup object by using the Windows 
+    PowerShell command line to modify a local instance of the SecurityLevel2AccessGroup object. Then set the 
+    Instance parameter to the local instance.
+    
+    $AdmObject = Get-AdmObject -Identity "SecurityLevel2AccessGroup"
+    $AdmObject.DisplayName = "Security Level 2"
+    Set-AdmObject -Instance $AdmObject.
+    
+
+PARAMETERS
+    -Add <hashtable>
+        Specifies values to add to an object property. Use this parameter to add one or more values to a property 
+        that cannot be modified using a cmdlet parameter. To modify an object property, you must use the LDAP 
+        display name. You can specify multiple values to a property by specifying a comma-separated list of 
+        values and more than one property by separating them using a semicolon.. The format for this parameter is
+        -Add @{Attribute1LDAPDisplayName=value1, value2, ...;   Attribute2LDAPDisplayName=value1, value2, ...; 
+        AttributeNLDAPDisplayName=value1, value2, ...}
+        
+        For example, if you want to remove the value "555-222-2222" and add the values "555-222-1111" and 
+        "555-222-3333" to Phone-Office-Other attribute (LDAP display name 'otherTelephone'), and add the value 
+        "555-222-9999" to Phone-Mobile-Other (LDAP display name 'otherMobile'), set the Add and Remove parameters 
+        as follows.
+        
+        -Add @{otherTelephone='555-222-1111', '555-222-3333'; otherMobile='555-222-9999' } -Remove 
+        @{otherTelephone='555-222-2222'}
+        
+        When you use the Add, Remove, Replace and Clear parameters together, the operations will be performed in 
+        the following order:
+        ..Remove
+        ..Add
+        ..Replace
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -AdaxesService <string>
+        Specifies the DNS name of an Adaxes service that will be used to execute this cmdlet. If this parameter 
+        is not specified, and the cmdlet is running from an Adaxes Active Directory provider drive, the value for 
+        this parameter can be determined from the current path. For example, if the current path is 
+        "Adaxes:/example.com", the Adaxes service on "example.com" will be used. If the parameter is not 
+        specified and the service DNS name can't be determined from the current path, the cmdlet will access 
+        Active Directory directly.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Clear <string[]>
+        Specifies an array of object properties that will be cleared in the directory. Use this parameter to 
+        clear one or more values of a property that cannot be modified using a cmdlet parameter. To modify an 
+        object property, you must use the LDAP display name. You can modify more than one property by specifying 
+        a comma-separated list. The format for this parameter is
+        -Clear Attribute1LDAPDisplayName, Attribute2LDAPDisplayName
+        
+        For example, if you want to clear the value for the Phone-Office-Other attribute (LDAP display name 
+        'otherTelephone') set the Clear parameter as follows.
+        
+        -Clear otherTelephone
+        
+        When you use the Add, Remove, Replace and Clear parameters together, the operations will be performed in 
+        the following order:
+        ..Remove
+        ..Add
+        ..Replace
+        ..Clear
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Credential <PSCredential>
+        Specifies the user account credentials to use to perform this task. The default credentials are the 
+        credentials of the currently logged on user unless the cmdlet is run from an Adaxes Active Directory 
+        PowerShell provider drive. If the cmdlet is run from such a provider drive, the account associated with 
+        the drive is the default one.
+        
+        To specify this parameter, you can type a user name, such as "User1" or "Domain01\User01" or you can 
+        specify a PSCredential object. If you specify a user name for this parameter, the cmdlet prompts for a 
+        password.
+        
+        You can also create a PSCredential object by using a script or by using the Get-Credential cmdlet. You 
+        can then set the Credential parameter to the PSCredential object The following example shows how to 
+        create credentials.
+        $AdminCredentials = Get-Credential "Domain01\User01"
+        
+        The following shows how to set the Credential parameter to these credentials.
+        -Credential $AdminCredentials
+        
+        If the acting credentials do not have permission to perform the task, Adaxes Active Directory PowerShell 
+        returns a terminating error.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Description <string>
+        Specifies a description of the object. This parameter sets the value of the Description property for the 
+        object. The LDAP Display Name (ldapDisplayName) for this property is "description".
+        
+        The following example shows how to set this parameter to a sample description.
+        -Description "Description of the object"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -DisplayName <string>
+        Specifies the display name of the object. This parameter sets the DisplayName property of the object. The 
+        LDAP Display Name (ldapDisplayName) for this property is "displayName".
+        
+        The following example shows how to set this parameter.
+        -DisplayName "Sara Davis Laptop"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Identity <Object>
+        Specifies an Active Directory object by providing one of the following property values. The identifier in 
+        parentheses is the LDAP display name for the attribute.
+        
+        Distinguished Name
+        Example: CN=saradavis,OU=users,OU=asia,DC=corp,DC=contoso,DC=com
+        GUID (objectGUID)
+        Example: 599c3d2e-f72d-4d20-8a88-030d99495f20
+        
+        The cmdlet searches the default naming context or partition to find the object. 
+        
+        This parameter can also get this object through the pipeline or you can set this parameter to an object 
+        instance.
+        
+        Derived types, such as the following are also accepted:
+        Softerra.Adaxes.PowerShellModule.Directory.ADGroup
+        Softerra.Adaxes.PowerShellModule.Directory.ADUser
+        Softerra.Adaxes.PowerShellModule.Directory.ADComputer
+        
+        This example shows how to set this parameter to an ADObject object instance named "ADObjectInstance".
+        -Identity   $ADObjectInstance
+        
+        Required?                    true
+        Position?                    1
+        Default value                
+        Accept pipeline input?       true (ByValue)
+        Accept wildcard characters?  false
+        
+    -Instance <ADObject>
+        Specifies a modified copy of an Active Directory object to use to update the actual Active Directory 
+        object. When this parameter is used, any modifications made to the modified copy of the object are also 
+        made to the corresponding Active Directory object. The cmdlet only updates the object properties that 
+        have changed.
+        
+        The Instance parameter can only update Active Directory objects that have been retrieved by using the 
+        Get-AdmObject cmdlet.  When you specify the Instance parameter, you cannot specify other parameters that 
+        set properties on the object.
+        
+        The following is an example of how to use the Get-AdmObject cmdlet to retrieve an instance of the object. 
+        The object is modified by using the Windows PowerShell command line. Then the Set-AdmObject cmdlet saves 
+        the changes to the Active Directory object.
+        
+        Step 1: Retrieve a local instance of the object.
+        $objectInstance = Get-AdmObject -Identity  "CN=someObject, DC=contoso,DC=com"
+        Step 2: Modify one or more properties of the object instance.
+        $objectInstance.Description = "New Description"
+        Step3: Save your changes to the object
+        Set-AdmObject -Instance $objectInstance
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Partition <string>
+        Specifies the distinguished name of an Active Directory partition. The distinguished name must be one of 
+        the naming contexts on the current directory server. The cmdlet searches this partition to find the 
+        object defined by the Identity parameter.
+        The following two examples show how to specify a value for this parameter.
+        -Partition "CN=Configuration,DC=EUROPE,DC=TEST,DC=CONTOSO,DC=COM"
+        
+        -Partition "CN=Schema,CN=Configuration,DC=EUROPE,DC=TEST,DC=CONTOSO,DC=COM"
+        
+        In many cases, a default value will be used for the Partition parameter if no value is specified.  The 
+        rules for determining the default value are given below.  Note that rules listed first are evaluated 
+        first, and once a default value can be determined, no further rules will be evaluated.
+        
+        - If the Identity parameter is set to a distinguished name, the default value of Partition is 
+        automatically generated from this distinguished name.
+        - If running cmdlets from an Adaxes Active Directory provider drive, the default value of Partition is 
+        automatically generated from the current path in the drive.
+        - If none of the previous cases apply, the default value of Partition will be set to the default 
+        partition or naming context of the target domain.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -PassThru <switch>
+        Returns the new or modified object. By default (i.e. if -PassThru is not specified), this cmdlet does not 
+        generate any output.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ProtectedFromAccidentalDeletion <System.Nullable[bool]>
+        Specifies whether to prevent the object from being deleted. When this property is set to true, you cannot 
+        delete the corresponding object without changing the value of the property. Possible values for this 
+        parameter include:
+            $false or 0
+            $true or 1
+        
+            The following example shows how to set this parameter to true.
+            -ProtectedFromAccidentalDeletion $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -Remove <hashtable>
+        Specifies that the cmdlet remove values of an object property. Use this parameter to remove one or more 
+        values of a property that cannot be modified using a cmdlet parameter. To remove an object property, you 
+        must use the LDAP display name. You can remove more than one property by specifying a semicolon-separated 
+        list. The format for this parameter is
+        -Remove @{Attribute1LDAPDisplayName=value[];   Attribute2LDAPDisplayName=value[]}
+        
+        For example, if you want to add the values blue and green and remove the value pink from a property with 
+        a LDAP display name of FavColors, set the Add and Remove parameters as follows.
+        -Add @{FavColors=Blue,Green} -Remove {FavColors=Pink}
+        
+        When you use the Add, Remove, Replace and Clear parameters together, the parameters will be applied in 
+        the following sequence:
+        ..Remove
+        ..Add
+        ..Replace
+        ..Clear
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Replace <hashtable>
+        Specifies values for an object property that will replace the current values. Use this parameter to 
+        replace one or more values of a property that cannot be modified using a cmdlet parameter. To modify an 
+        object property, you must use the LDAP display name. You can modify more than one property by specifying 
+        a comma-separated list. The format for this parameter is
+        -Replace @{Attribute1LDAPDisplayName=value[],   Attribute2LDAPDisplayName=value[]}
+        
+        For example, if you want to replace the value "555-222-2222" with the values "555-222-1111" for 
+        Phone-Office-Other attribute (LDAP display name 'otherTelephone') set the Replace parameter as follows.
+        
+        -Replace @{otherTelephone='555-222-2222', '555-222-1111'}
+        
+        When you use the Add, Remove, Replace  and Clear parameters together, the operations will be performed in 
+        the following order:
+        ..Remove
+        ..Add
+        ..Replace
+        ..Clear
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Server <string>
+        Specifies the Active Directory Domain Services instance to connect to, by providing one of the following 
+        values for a corresponding domain name or directory server.
+        Domain name values:
+        Fully qualified domain name
+        Examples: corp.contoso.com
+        NetBIOS name
+        Example: CORP
+        
+        Directory server values:
+        Fully qualified directory server name
+        Example: corp-DC12.corp.contoso.com
+        NetBIOS name
+        Example: corp-DC12
+        Fully qualified directory server name and port
+        Example: corp-DC12.corp.contoso.com:3268
+        
+        The default value for the Server parameter is determined by one of the following methods in the order 
+        that they are listed:
+        -By using Server value from objects passed through the pipeline.
+        -By using the server information associated with the Adaxes Active Directory PowerShell provider drive, 
+        when running under that drive.
+        -By using the domain of the computer running Powershell.
+        
+        The following example shows how to specify a fully qualified domain name as the parameter value.
+        -Server "corp.contoso.com"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Confirm [<SwitchParameter>]
+        Prompts you for confirmation before executing the command.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -WhatIf [<SwitchParameter>]
+        Describes what would happen if you executed the command without actually executing the command.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer, PipelineVariable, and OutVariable. For more information, see 
+        about_CommonParameters (https:/go.microsoft.com/fwlink/?LinkID=113216). 
+    
+INPUTS
+    None or Object
+        An Active Directory object is received by the Identity parameter. Derived types, such as the following 
+        are also accepted:
+        Softerra.Adaxes.PowerShellModule.Directory.ADGroup
+        Softerra.Adaxes.PowerShellModule.Directory.ADUser
+        Softerra.Adaxes.PowerShellModule.Directory.ADComputer
+        Softerra.Adaxes.PowerShellModule.Directory.ADOrganizationalUnit
+        
+        An object that was retrieved by using the Get-AdmObject cmdlet and then modified is received by the 
+        Instance parameter.
+    
+    
+OUTPUTS
+    None or Softerra.Adaxes.PowerShellModule.Directory.AdmObject
+        Returns the modified object when the PassThru parameter is specified. By default, this cmdlet does not 
+        generate any output.
+    
+    
+NOTES
+    
+    
+        
+        
+    
+    -------------------------- EXAMPLE 1 --------------------------
+    
+    C:\PS>Set-AdmObject 'CN=AntonioAl Direct Reports,OU=Finance,OU=UserAccounts,DC=FABRIKAM,DC=COM' -Description 
+    'Distribution List of Antonio Alwan Direct Reports'
+    
+    Set the Description property on the object with DistinguishedName 'CN=AntonioAl Direct 
+    Reports,OU=Finance,OU=UserAccounts,DC=FABRIKAM,DC=COM'.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 2 --------------------------
+    
+    C:\PS>Set-AdmObject 'CN=DEFAULTIPSITELINK,CN=IP,CN=Inter-Site 
+    Transports,CN=Sites,CN=Configuration,DC=FABRIKAM,DC=COM' -Add 
+    @{siteList='CN=BO3,CN=Sites,CN=Configuration,DC=FABRIKAM,DC=COM'} -Partition 
+    'CN=Configuration,DC=FABRIKAM,DC=COM'
+    
+    Add the site 'CN=BO3,CN=Sites,CN=Configuration,DC=FABRIKAM,DC=COM' to the property siteList on the object 
+    with DistinguishedName 'CN=DEFAULTIPSITELINK,CN=IP,CN=Inter-Site 
+    Transports,CN=Sites,CN=Configuration,DC=FABRIKAM,DC=COM'.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 3 --------------------------
+    
+    C:\PS>$urlValues = @()
+    $urlValues += "www.contoso.com"
+    $urlValues += "www.fabrikam.com"
+    
+    Set-AdmObject "cdadd380-d3a8-4fd1-9d30-5cf72d94a056" -Add @{url=$urlValues}
+    
+    Add two new urls to the property urlValues in the object with objectGuid 
+    'cdadd380-d3a8-4fd1-9d30-5cf72d94a056'.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 4 --------------------------
+    
+    C:\PS>$urlValues = @()
+    $urlValues += "www.contoso.com"
+    $urlValues += "www.fabrikam.com"
+    
+    Set-AdmObject "cdadd380-d3a8-4fd1-9d30-5cf72d94a056" -Replace @{url=$urlValues;description="Antonio Alwan"}
+    
+    Replaces the old values of the multi-valued attribute 'url' with the new values and sets the value of the 
+    attribute 'description'.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 5 --------------------------
+    
+    C:\PS>Set-AdmObject "cdadd380-d3a8-4fd1-9d30-5cf72d94a056" -Remove @{url="www.contoso.com"} -Replace 
+    @{description="Antonio Alwan (European Manager)"}
+    
+    Removes the specified value from the attribute 'url' and sets the value of the attribute 'description'.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 6 --------------------------
+    
+    C:\PS>$myComp = Get-AdmObject -identity "cdadd380-d3a8-4fd1-9d30-5cf72d94a056" -Properties 
+    "userAccountControl","description"
+    
+    #Now set the new account control using powershell bitwise OR operation (-bor) and set description
+    $myComp.userAccountControl = $myComp.userAccountControl -bor 50
+    $myComp.description = "Setting a new UAC on the object"
+    
+    #Save the changes
+    Set-AdmObject -Instance $myComp
+    
+    Sets a new UAC bit on an object by updating the attribute 'userAccountControl' and setting the value of the 
+    attribute 'description'.
+    
+    
+    
+    
+    
+RELATED LINKS
+    New-AdmObject 
+    Get-AdmObject 
+    Remove-AdmObject 
+
+
+

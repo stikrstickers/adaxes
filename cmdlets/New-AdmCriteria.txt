@@ -1,0 +1,127 @@
+﻿
+NAME
+    New-AdmCriteria
+    
+SYNOPSIS
+    Creates a new instance of Criteria class that is used for performing directory object queries.
+    
+    
+SYNTAX
+    New-AdmCriteria [[-Type] <String[]>] [[-Expression] <string>] [<CommonParameters>]
+    
+    
+DESCRIPTION
+    The New-AdmCriteria cmdlet creates a new Criteria object.
+    
+    The Type parameter specifies the object types this criteria should match e.g. User, Computer.
+    
+    The Expression parameter specifies the criteria expression to apply to all specified types. 
+    Criteria expressions let you define more detailed queries based on the objects' property values e.g. 
+    {department -eq "Sales"}. 
+    If Type is not specified, the expression will be applied to All object types.
+    
+    Both parameters are optional. If no parameters are specified, this cmdlet will create an empty criteria that 
+    matches all objects.
+    
+    For more details about building criteria expressions, see Adaxes SDK 
+    (https://adaxes.com/sdk/HowDoI.BuildCriteria/).
+    
+
+PARAMETERS
+    -Expression <string>
+        Specifies a criteria expression. The expression will be applied to all included object types.
+        
+        The expression will be applied to All object types if the Type parameter is not specified.
+        
+        Required?                    false
+        Position?                    2
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Type <String[]>
+        Specifies the name of the object type this criteria should match. 
+        The name must be specified exactly as it is defined in your directory schema.
+        
+        You can also use the wildcard object type, the * character. 
+        If * is the only included object type, it will translate to All object types. 
+        If any particular object type is included along with the wildcard, then * will translate to All other 
+        object types.
+        
+        Required?                    false
+        Position?                    1
+        Default value                *
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer, PipelineVariable, and OutVariable. For more information, see 
+        about_CommonParameters (https:/go.microsoft.com/fwlink/?LinkID=113216). 
+    
+INPUTS
+    
+OUTPUTS
+    Criteria
+        https://adaxes.com/sdk/Criteria
+    
+        
+    
+    
+NOTES
+    
+    
+        
+        
+    
+    -------------------------- EXAMPLE 1 --------------------------
+    
+    C:\PS>New-AdmCriteria -Type "User"
+    
+    Create a criteria matching only users
+    
+    
+    
+    
+    -------------------------- EXAMPLE 2 --------------------------
+    
+    C:\PS>New-AdmCriteria "User","Computer"
+    
+    Create a criteria matching users and computers
+    
+    
+    
+    
+    -------------------------- EXAMPLE 3 --------------------------
+    
+    C:\PS>New-AdmCriteria -Type "User" -Expression {department -eq "Sales"}
+    
+    Create a criteria matching only users from a certain department
+    
+    
+    
+    
+    -------------------------- EXAMPLE 4 --------------------------
+    
+    C:\PS>New-AdmCriteria "*" {description -empty $True}
+    
+    Create a criteria matching all objects with empty description
+    
+    
+    
+    
+    -------------------------- EXAMPLE 5 --------------------------
+    
+    C:\PS>New-AdmCriteria -Expression {name -startstwith "Admin"}
+    
+    Create a criteria matching all objects whose name starts with Admin
+    
+    
+    
+    
+    
+RELATED LINKS
+
+
+

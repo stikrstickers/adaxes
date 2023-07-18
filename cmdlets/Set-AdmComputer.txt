@@ -1,0 +1,853 @@
+﻿
+NAME
+    Set-AdmComputer
+    
+SYNOPSIS
+    Modifies an Active Directory computer object.
+    
+    
+SYNTAX
+    Set-AdmComputer [-Identity] <Object> [-AccountExpirationDate <System.Nullable[System.DateTime]>] 
+    [-AccountNotDelegated <System.Nullable[bool]>] [-Add <hashtable>] [-AllowReversiblePasswordEncryption 
+    <System.Nullable[bool]>] [-CannotChangePassword <System.Nullable[bool]>] [-Certificates <hashtable>] [-Clear 
+    <string[]>] [-Description <string>] [-DisplayName <string>] [-DNSHostName <string>] [-Enabled 
+    <System.Nullable[bool]>] [-HomePage <string>] [-Location <string>] [-ManagedBy <Object>] [-OperatingSystem 
+    <string>] [-OperatingSystemHotfix <string>] [-OperatingSystemServicePack <string>] [-OperatingSystemVersion 
+    <string>] [-PasswordNeverExpires <System.Nullable[bool]>] [-PasswordNotRequired <System.Nullable[bool]>] 
+    [-ProtectedFromAccidentalDeletion <System.Nullable[bool]>] [-Remove <hashtable>] [-Replace <hashtable>] 
+    [-ServicePrincipalNames <hashtable>] [-TrustedForDelegation <System.Nullable[bool]>] [-UserPrincipalName 
+    <string>] [-AdaxesService <string>] [-ChangePasswordAtLogon <System.Nullable[bool]>] [-Credential 
+    <PSCredential>] [-Partition <string>] [-PassThru <switch>] [-SAMAccountName <string>] [-Server <string>] 
+    [-Confirm] [-WhatIf] [<CommonParameters>]
+    
+    Set-AdmComputer -Instance <ADComputer> [-AdaxesService <string>] [-ChangePasswordAtLogon 
+    <System.Nullable[bool]>] [-Credential <PSCredential>] [-Partition <string>] [-PassThru <switch>] 
+    [-SAMAccountName <string>] [-Server <string>] [-Confirm] [-WhatIf] [<CommonParameters>]
+    
+    
+DESCRIPTION
+    The Set-AdmComputer cmdlet modifies the properties of an Active Directory computer object. You can modify 
+    commonly used property values by using the cmdlet parameters. Property values that are not associated with 
+    cmdlet parameters can be modified by using the Add, Replace, Clear and Remove parameters.
+    
+    The Identity parameter specifies the Active Directory computer to modify. You can identify a computer by its 
+    distinguished name (DN), GUID, security identifier (SID) or Security Accounts Manager (SAM) account name. You 
+    can also set the Identity parameter to an object variable such as $<localComputerObject>, or you can pass an 
+    object through the pipeline to the Identity parameter. For example, you can use the Get-AdmComputer cmdlet to 
+    retrieve a computer object and then pass the object through the pipeline to Set-AdmComputer.
+    
+    The Instance parameter provides a way to update a computer by applying the changes made to a copy of the 
+    computer object. When you set the Instance parameter to a copy of an Active Directory computer object that 
+    has been modified, the Set-AdmComputer cmdlet makes the same changes to the original computer object. To get 
+    a copy of the object to modify, use the Get-AdmComputer object. When you specify the Instance parameter you 
+    should not pass the identity parameter. For more information about the Instance parameter, see the Instance 
+    parameter description. For more information about how the instance concept is used in Active Directory 
+    cmdlets, see about_ActiveDirectory_Instance.
+    
+    The following examples show how to modify the Location property of a computer object by using three methods:
+    -By specifying the Identity and the Location parameters
+    -By passing a computer object through the pipeline and specifying the Location parameter
+    -By specifying the Instance parameter.
+    
+    Method 1: Modify the Location property for the saraDavisLaptop computer by using the Identity and Location 
+    parameters.
+    
+    Set-AdmComputer  -Identity SaraDavisLaptop  -Location  "W4013"
+    
+    Method 2: Modify the Location property for the saraDavisLaptop computer by passing the computer object 
+    through the pipeline and specifying the Location parameter.
+    
+    Get-AdmComputer SaraDavisLaptop | Set-ADcomputer -Location  "W4013"
+    
+    Method 3:  Modify the Location property for the saraDavisLaptop computer by using the Windows PowerShell 
+    command line to modify a local instance of the computer object. Then set the Instance parameter to the local 
+    instance.
+    
+    $computer = Get-ADcomputer saraDavisLaptop
+    $computer.Location=  "W4013"
+    Set-AdmComputer -Instance $computer
+    
+
+PARAMETERS
+    -AccountExpirationDate <System.Nullable[System.DateTime]>
+        Specifies the expiration date for an account. When you set this parameter to 0, the account never 
+        expires. This parameter sets the AccountExpirationDate property of an account object. The LDAP Display 
+        name (ldapDisplayName) for this property is accountExpires.
+        
+        Use the DateTime syntax when you specify this parameter. Time is assumed to be local time unless 
+        otherwise specified. When a time value is not specified, the time is assumed to be 12:00:00 AM local 
+        time. When a date is not specified, the date is assumed to be the current date. The following examples 
+        show commonly-used syntax to specify a DateTime object.
+        "4/17/2006"
+        "Monday, April 17, 2006"
+        "2:22:45 PM"
+        "Monday, April 17, 2006 2:22:45 PM"
+        
+        These examples specify the same date and time without the seconds.
+        "4/17/2006 2:22 PM"
+        "Monday, April 17, 2006 2:22 PM"
+        "2:22 PM"
+        
+        The following example shows how to specify a date and time by using the RFC1123 standard. This example 
+        defines time by using Greenwich Mean Time (GMT).
+        "Mon, 17 Apr 2006 21:22:48 GMT"
+        
+        The following example shows how to specify a round-trip value as Coordinated Universal Time (UTC). This 
+        example represents Monday, April 17, 2006 at 2:22:48 PM UTC.
+        "2006-04-17T14:22:48.0000000"
+        
+        The following example shows how to set this parameter to the date May 1, 2012 at 5 PM.
+        -AccountExpirationDate "05/01/2012 5:00:00 PM"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -AccountNotDelegated <System.Nullable[bool]>
+        Specifies whether the security context of the user is delegated to a service. When this parameter is set 
+        to true, the security context of the account is not delegated to a service even when the service account 
+        is set as trusted for Kerberos delegation. This parameter sets the AccountNotDelegated property for an 
+        Active Directory account. This parameter also sets the ADS_UF_NOT_DELEGATED flag of the Active Directory 
+        User Account Control (UAC) attribute. Possible values for this parameter include
+        $false or 0
+        $true or 1
+        
+        The following example shows how to set this parameter so that the security context of the account is not 
+        delegated to a service.
+        -AccountNotDelegated $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Add <hashtable>
+        Specifies values to add to an object property. Use this parameter to add one or more values to a property 
+        that cannot be modified using a cmdlet parameter. To modify an object property, you must use the LDAP 
+        display name. You can specify multiple values to a property by specifying a comma-separated list of 
+        values and more than one property by separating them using a semicolon.. The format for this parameter is
+        -Add @{Attribute1LDAPDisplayName=value1, value2, ...;   Attribute2LDAPDisplayName=value1, value2, ...; 
+        AttributeNLDAPDisplayName=value1, value2, ...}
+        
+        For example, if you want to remove the value "555-222-2222" and add the values "555-222-1111" and 
+        "555-222-3333" to Phone-Office-Other attribute (LDAP display name 'otherTelephone'), and add the value 
+        "555-222-9999" to Phone-Mobile-Other (LDAP display name 'otherMobile'), set the Add and Remove parameters 
+        as follows.
+        
+        -Add @{otherTelephone='555-222-1111', '555-222-3333'; otherMobile='555-222-9999' } -Remove 
+        @{otherTelephone='555-222-2222'}
+        
+        When you use the Add, Remove, Replace and Clear parameters together, the operations will be performed in 
+        the following order:
+        ..Remove
+        ..Add
+        ..Replace
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -AllowReversiblePasswordEncryption <System.Nullable[bool]>
+        Specifies whether reversible password encryption is allowed for the account. This parameter sets the 
+        AllowReversiblePasswordEncryption property of the account. This parameter also sets the 
+        ADS_UF_ENCRYPTED_TEXT_PASSWORD_ALLOWED flag of the Active Directory User Account Control (UAC) attribute. 
+        Possible values for this parameter include:
+        $false or 0
+        $true or 1
+        
+        The following example shows how to set this parameter to true.
+        -AllowReversiblePasswordEncryption $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -AdaxesService <string>
+        Specifies the DNS name of an Adaxes service that will be used to execute this cmdlet. If this parameter 
+        is not specified, and the cmdlet is running from an Adaxes Active Directory provider drive, the value for 
+        this parameter can be determined from the current path. For example, if the current path is 
+        "Adaxes:/example.com", the Adaxes service on "example.com" will be used. If the parameter is not 
+        specified and the service DNS name can't be determined from the current path, the cmdlet will access 
+        Active Directory directly.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -CannotChangePassword <System.Nullable[bool]>
+        Specifies whether the account password can be changed. This parameter sets the CannotChangePassword 
+        property of an account. Possible values for this parameter include:
+        $false or 0
+        $true or 1
+        
+        The following example shows how to set this parameter so that the account password can be changed.
+        -CannotChangePassword $false
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Certificates <hashtable>
+        Modifies the DER-encoded X.509v3 certificates of the account. These certificates include the public key 
+        certificates issued to this account by the Microsoft Certificate Service. This parameter sets the 
+        Certificates property of the account object. The LDAP Display Name (ldapDisplayName) for this property is 
+        "userCertificate".
+        
+        Syntax:
+        To add values:
+        -Certificates @{Add=value1,value2,...}
+        To remove values:
+        -Certificates @{Remove=value3,value4,...}
+        To replace values:
+        -Certificates @{Replace=value1,value2,...}
+        To clear all values:
+        -Certificates $null
+        
+        The following example shows how to create a certificate by using the New-Object cmdlet, and then add it 
+        to a user account. When this cmdlet is run, <certificate password> is replaced with the password used to 
+        add the certificate.
+        
+        $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate certificate1.cer  
+        <certificate password>
+        Set-AdmUser saradavis  -Certificates @{Add=$cert}
+        
+        The following example shows how to add a certificate that is specified as a byte array.
+        Set-AdmUser saradavis  -Certificates @{Add= [Byte[]](0xC5,0xEE,0x53,...)}
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ChangePasswordAtLogon <System.Nullable[bool]>
+        Specifies whether a password must be changed during the next logon attempt. Possible values for this 
+        parameter include:
+        $false or 0
+        $true or 1
+        
+        This parameter cannot be set to $true or 1 for an account that also has the PasswordNeverExpires property 
+        set to true.
+        
+        The following example shows how to set this parameter so that the password must be changed at logon.
+        -ChangePasswordAtLogon $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Clear <string[]>
+        Specifies an array of object properties that will be cleared in the directory. Use this parameter to 
+        clear one or more values of a property that cannot be modified using a cmdlet parameter. To modify an 
+        object property, you must use the LDAP display name. You can modify more than one property by specifying 
+        a comma-separated list. The format for this parameter is
+        -Clear Attribute1LDAPDisplayName, Attribute2LDAPDisplayName
+        
+        For example, if you want to clear the value for the Phone-Office-Other attribute (LDAP display name 
+        'otherTelephone') set the Clear parameter as follows.
+        
+        -Clear otherTelephone
+        
+        When you use the Add, Remove, Replace and Clear parameters together, the operations will be performed in 
+        the following order:
+        ..Remove
+        ..Add
+        ..Replace
+        ..Clear
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Credential <PSCredential>
+        Specifies the user account credentials to use to perform this task. The default credentials are the 
+        credentials of the currently logged on user unless the cmdlet is run from an Adaxes Active Directory 
+        PowerShell provider drive. If the cmdlet is run from such a provider drive, the account associated with 
+        the drive is the default one.
+        
+        To specify this parameter, you can type a user name, such as "User1" or "Domain01\User01" or you can 
+        specify a PSCredential object. If you specify a user name for this parameter, the cmdlet prompts for a 
+        password.
+        
+        You can also create a PSCredential object by using a script or by using the Get-Credential cmdlet. You 
+        can then set the Credential parameter to the PSCredential object The following example shows how to 
+        create credentials.
+        $AdminCredentials = Get-Credential "Domain01\User01"
+        
+        The following shows how to set the Credential parameter to these credentials.
+        -Credential $AdminCredentials
+        
+        If the acting credentials do not have permission to perform the task, Adaxes Active Directory PowerShell 
+        returns a terminating error.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Description <string>
+        Specifies a description of the object. This parameter sets the value of the Description property for the 
+        object. The LDAP Display Name (ldapDisplayName) for this property is "description".
+        
+        The following example shows how to set this parameter to a sample description.
+        -Description "Description of the object"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -DisplayName <string>
+        Specifies the display name of the object. This parameter sets the DisplayName property of the object. The 
+        LDAP Display Name (ldapDisplayName) for this property is "displayName".
+        
+        The following example shows how to set this parameter.
+        -DisplayName "Sara Davis Laptop"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -DNSHostName <string>
+        Specifies the fully qualified domain name (FQDN) of the computer. This parameter sets the DNSHostName 
+        property for a computer object. The LDAP Display Name for this property is "dNSHostName".
+        
+        The following example shows how to set this parameter to a FQDN.
+        -DNSHostName "corp.contoso.com"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Enabled <System.Nullable[bool]>
+        Specifies if an account is enabled. An enabled account requires a password. This parameter sets the 
+        Enabled property for an account object. This parameter also sets the ADS_UF_ACCOUNTDISABLE flag of the 
+        Active Directory User Account Control (UAC) attribute. Possible values for this parameter include:
+        $false or 0
+        $true or 1
+        
+        The following example shows how to set this parameter to enable the account.
+        -Enabled $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -HomePage <string>
+        Specifies the URL of the home page of the object. This parameter sets the homePage property of an Active 
+        Directory object. The LDAP Display Name (ldapDisplayName) for this property is "wWWHomePage".
+        
+        The following example shows how to set this parameter to a URL.
+        -HomePage "http://employees.contoso.com/sdavis"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Identity <Object>
+        Specifies an Active Directory computer object by providing one of the following property values. The 
+        identifier in parentheses is the LDAP display name for the attribute.
+        
+        Distinguished Name
+        Example: CN=SaraDavisDesktop,CN=Europe,CN=Users,DC=corp,DC=contoso,DC=com
+        GUID  (objectGUID)
+        Example: 599c3d2e-f72d-4d20-8a88-030d99495f20
+        Security Identifier (objectSid)
+        Example: S-1-5-21-3165297888-301567370-576410423-1103
+        Security Accounts Manager Account Name (sAMAccountName)
+        Example: SaraDavisDesktop
+        
+        The cmdlet searches the default naming context or partition to find the object. If the identifier given 
+        is a DN, the partition to search will be computed from that DN. 
+        
+        This parameter can also get this object through the pipeline or you can set this parameter to a computer 
+        object instance.
+        
+        This example shows how to set the parameter to a distinguished name.
+        -Identity  "CN=saraDavisDesktop,CN=Europe,CN=Users,DC=corp,DC=contoso,DC=com"
+        
+        This example shows how to set this parameter to a computer object instance named "computerInstance".
+        -Identity   $computerInstance
+        
+        Required?                    true
+        Position?                    1
+        Default value                
+        Accept pipeline input?       true (ByValue)
+        Accept wildcard characters?  false
+        
+    -Instance <ADComputer>
+        Specifies a modified copy of a computer object to use to update the actual Active Directory computer 
+        object. When this parameter is used, any modifications made to the modified copy of the object are also 
+        made to the corresponding Active Directory object. The cmdlet only updates the object properties that 
+        have changed.
+        
+        The Instance parameter can only update computer objects that have been retrieved by using the 
+        Get-AdmComputer cmdlet. When you specify the Instance parameter, you cannot specify other parameters that 
+        set properties on the object.
+        
+        The following is an example of how to use the Get-AdmComputer cmdlet to retrieve an instance of the 
+        ADComputer object. The object is modified by using the Windows PowerShell command line. Then the 
+        Set-AdmComputer cmdlet saves the changes to the Active Directory object.
+        
+        Step 1: Retrieve a local instance of the object.
+        $computerInstance = Get-AdmComputer  -Identity saraDavisDesktop
+        Step 2: Modify one or more properties of the object instance.
+        $computerInstance.Description = "Sara Davis Computer"
+        Step3: Save your changes to saraDavisDesktop.
+        Set-AdmComputer -Instance $computerInstance
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Location <string>
+        Specifies the location of the computer, such as an office number. This parameter sets the Location 
+        property of a computer. The LDAP display name (ldapDisplayName) of this property is "location".
+        
+        The following example shows how to set this parameter.
+        -Location  "Test Lab A"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ManagedBy <Object>
+        Specifies the user or group that manages the object by providing one of the following property values. 
+        Note: The identifier in parentheses is the LDAP display name for the property.
+        Distinguished Name
+        Example:  CN=SaraDavis,OU=Europe,CN=Users,DC=corp,DC=contoso,DC=com
+        GUID (objectGUID)
+        Example: 599c3d2e-f72d-4d20-8a88-030d99495f20
+        Security Identifier (objectSid)
+        Example: S-1-5-21-3165297888-301567370-576410423-1103
+        SAM Account Name (sAMAccountName)
+        Example: saradavis
+        
+        This parameter sets the Active Directory attribute with an LDAP Display Name of "managedBy".
+        
+        The following example shows how to specify this parameter.
+        -ManagedBy ContosoAdmins
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -OperatingSystem <string>
+        Specifies an operating system name. This parameter sets the OperatingSystem property of the computer 
+        object. The LDAP Display Name (ldapDisplayName) for this property is "operatingSystem".
+        
+        The following example shows how to set this parameter.
+        -OperatingSystem "Windows Server 2008 Enterprise"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -OperatingSystemHotfix <string>
+        Specifies an operating system hotfix name. This parameter sets the operatingSystemHotfix property of the 
+        computer object. The LDAP display name for this property is "operatingSystemHotfix".
+        
+        The following example shows how to specify this parameter.
+        -operatingSystemHotfix "523466"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -OperatingSystemServicePack <string>
+        Specifies the name of an operating system service pack. This parameter sets the 
+        OperatingSystemServicePack property of the computer object. The LDAP display name (ldapDisplayName) for 
+        this property is "operatingSystemServicePack".
+        
+        The following example shows how to specify this parameter.
+        -OperatingSystemServicePack "Service Pack 2"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -OperatingSystemVersion <string>
+        Specifies an operating system version. This parameter sets the OperatingSystemVersion property of the 
+        computer object. The LDAP display name (ldapDisplayName) for this property is "operatingSystemVersion".
+        
+        The following example shows how to specify this parameter.
+        -OperatingSystemVersion "6.0 (6001)"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Partition <string>
+        Specifies the distinguished name of an Active Directory partition. The distinguished name must be one of 
+        the naming contexts on the current directory server. The cmdlet searches this partition to find the 
+        object defined by the Identity parameter.
+        The following two examples show how to specify a value for this parameter.
+        -Partition "CN=Configuration,DC=EUROPE,DC=TEST,DC=CONTOSO,DC=COM"
+        
+        -Partition "CN=Schema,CN=Configuration,DC=EUROPE,DC=TEST,DC=CONTOSO,DC=COM"
+        
+        In many cases, a default value will be used for the Partition parameter if no value is specified.  The 
+        rules for determining the default value are given below.  Note that rules listed first are evaluated 
+        first, and once a default value can be determined, no further rules will be evaluated.
+        
+        - If the Identity parameter is set to a distinguished name, the default value of Partition is 
+        automatically generated from this distinguished name.
+        - If running cmdlets from an Adaxes Active Directory provider drive, the default value of Partition is 
+        automatically generated from the current path in the drive.
+        - If none of the previous cases apply, the default value of Partition will be set to the default 
+        partition or naming context of the target domain.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -PassThru <switch>
+        Returns the new or modified object. By default (i.e. if -PassThru is not specified), this cmdlet does not 
+        generate any output.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -PasswordNeverExpires <System.Nullable[bool]>
+        Specifies whether the password of an account can expire. This parameter sets the PasswordNeverExpires 
+        property of an account object. This parameter also sets the ADS_UF_DONT_EXPIRE_PASSWD flag of the Active 
+        Directory User Account Control attribute. Possible values for this parameter include:
+        $false or 0
+        $true or 1
+        
+        Note: This parameter cannot be set to $true or 1 for an account that also has the ChangePasswordAtLogon 
+        property set to true.
+        
+        The following example shows how to set this parameter so that the password can expire.
+        -PasswordNeverExpires $false
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -PasswordNotRequired <System.Nullable[bool]>
+        Specifies whether the account requires a password. This parameter sets the PasswordNotRequired property 
+        of an account, such as a user or computer account. This parameter also sets the ADS_UF_PASSWD_NOTREQD 
+        flag of the Active Directory User Account Control attribute. Possible values for this parameter are:
+        $false or 0
+        $true or 1
+        
+        The following example shows how to set this parameter so that as password is not required for the account.
+        -PasswordNotRequired $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ProtectedFromAccidentalDeletion <System.Nullable[bool]>
+        Specifies whether to prevent the object from being deleted. When this property is set to true, you cannot 
+        delete the corresponding object without changing the value of the property. Possible values for this 
+        parameter include:
+            $false or 0
+            $true or 1
+        
+            The following example shows how to set this parameter to true.
+            -ProtectedFromAccidentalDeletion $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -Remove <hashtable>
+        Specifies that the cmdlet remove values of an object property. Use this parameter to remove one or more 
+        values of a property that cannot be modified using a cmdlet parameter. To remove an object property, you 
+        must use the LDAP display name. You can remove more than one property by specifying a semicolon-separated 
+        list. The format for this parameter is
+        -Remove @{Attribute1LDAPDisplayName=value[];   Attribute2LDAPDisplayName=value[]}
+        
+        For example, if you want to add the values blue and green and remove the value pink from a property with 
+        a LDAP display name of FavColors, set the Add and Remove parameters as follows.
+        -Add @{FavColors=Blue,Green} -Remove {FavColors=Pink}
+        
+        When you use the Add, Remove, Replace and Clear parameters together, the parameters will be applied in 
+        the following sequence:
+        ..Remove
+        ..Add
+        ..Replace
+        ..Clear
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Replace <hashtable>
+        Specifies values for an object property that will replace the current values. Use this parameter to 
+        replace one or more values of a property that cannot be modified using a cmdlet parameter. To modify an 
+        object property, you must use the LDAP display name. You can modify more than one property by specifying 
+        a comma-separated list. The format for this parameter is
+        -Replace @{Attribute1LDAPDisplayName=value[],   Attribute2LDAPDisplayName=value[]}
+        
+        For example, if you want to replace the value "555-222-2222" with the values "555-222-1111" for 
+        Phone-Office-Other attribute (LDAP display name 'otherTelephone') set the Replace parameter as follows.
+        
+        -Replace @{otherTelephone='555-222-2222', '555-222-1111'}
+        
+        When you use the Add, Remove, Replace  and Clear parameters together, the operations will be performed in 
+        the following order:
+        ..Remove
+        ..Add
+        ..Replace
+        ..Clear
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -SAMAccountName <string>
+        Specifies the Security Account Manager (SAM) account name of the user, group, computer, or service 
+        account. The maximum length of the description is 256 characters. To be compatible with older operating 
+        systems, create a SAM account name that is 20 characters or less. This parameter sets the SAMAccountName 
+        for an account object. The LDAP display name (ldapDisplayName) for this property is "sAMAccountName".
+        
+        The following example shows how to specify this parameter.
+        -SAMAccountName "saradavis"
+        
+        Note: If the string value provided is not terminated with a '$' character, the system adds one if needed.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Server <string>
+        Specifies the Active Directory Domain Services instance to connect to, by providing one of the following 
+        values for a corresponding domain name or directory server.
+        Domain name values:
+        Fully qualified domain name
+        Examples: corp.contoso.com
+        NetBIOS name
+        Example: CORP
+        
+        Directory server values:
+        Fully qualified directory server name
+        Example: corp-DC12.corp.contoso.com
+        NetBIOS name
+        Example: corp-DC12
+        Fully qualified directory server name and port
+        Example: corp-DC12.corp.contoso.com:3268
+        
+        The default value for the Server parameter is determined by one of the following methods in the order 
+        that they are listed:
+        -By using Server value from objects passed through the pipeline.
+        -By using the server information associated with the Adaxes Active Directory PowerShell provider drive, 
+        when running under that drive.
+        -By using the domain of the computer running Powershell.
+        
+        The following example shows how to specify a fully qualified domain name as the parameter value.
+        -Server "corp.contoso.com"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ServicePrincipalNames <hashtable>
+        Specifies the service principal names for the account. This parameter sets the ServicePrincipalNames 
+        property of the account. The LDAP display name (ldapDisplayName) for this property is 
+        servicePrincipalName. This parameter uses the following syntax to add, remove, replace or clear service 
+        principal name values.
+        Syntax:
+        To add values:
+        -ServicePrincipalNames @{Add=value1,value2,...}
+        To remove values:
+        -ServicePrincipalNames @{Remove=value3,value4,...}
+        To replace values:
+        -ServicePrincipalNames @{Replace=value1,value2,...}
+        To clear all values:
+        -ServicePrincipalNames $null
+        
+        The following example shows how to add a service principal name.
+        -ServicePrincipalNames-@{Add="SQLservice\accounting.corp.contoso.com:1456"}
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -TrustedForDelegation <System.Nullable[bool]>
+        Specifies whether an account is trusted for Kerberos delegation. A service that runs under an account 
+        that is trusted for Kerberos delegation can assume the identity of a client requesting the service. This 
+        parameter sets the TrustedForDelegation property of an account object. This value also sets the 
+        ADS_UF_TRUSTED_FOR_DELEGATION flag of the Active Directory User Account Control attribute. Possible 
+        values for this parameter are:
+        $false or 0
+        $true or 1
+        
+        The following example shows how to specify that an account is trusted for Kerberos delegation.
+        -TrustedForDelegation $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -UserPrincipalName <string>
+        Each user account has a user principal name (UPN) in the format <user>@<DNS-domain-name>. A UPN is a 
+        friendly name assigned by an administrator that is shorter than the LDAP distinguished name used by the 
+        system and easier to remember. The UPN is independent of the user object's DN, so a user object can be 
+        moved or renamed without affecting the user logon name. When logging on using a UPN, users no longer have 
+        to choose a domain from a list on the logon dialog box.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Confirm [<SwitchParameter>]
+        Prompts you for confirmation before executing the command.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -WhatIf [<SwitchParameter>]
+        Describes what would happen if you executed the command without actually executing the command.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer, PipelineVariable, and OutVariable. For more information, see 
+        about_CommonParameters (https:/go.microsoft.com/fwlink/?LinkID=113216). 
+    
+INPUTS
+    Softerra.Adaxes.PowerShellModule.Directory.ADComputer
+        A computer object is received by the Identity parameter.
+        
+        A computer object that was retrieved by using the Get-AdmComputer cmdlet and then modified is received by 
+        the Instance parameter.
+    
+    
+OUTPUTS
+    None or Softerra.Adaxes.PowerShellModule.Directory.ADComputer
+        Returns the modified computer object when the PassThru parameter is specified. By default, this cmdlet 
+        does not generate any output.
+    
+    
+NOTES
+    
+    
+        This cmdlet does not work with AD LDS.
+        
+        
+        This cmdlet does not work when connected to Global Catalog port.
+        
+    
+    -------------------------- EXAMPLE 1 --------------------------
+    
+    C:\PS>Set-AdmComputer "FABRIKAM-SRV1" -ServicePrincipalName 
+    @{Replace="MSSQLSVC/FABRIKAM-SRV1.FABRIKAM.COM:1456","MSOLAPSVC.3/FABRIKAM-SRV1.FABRIKAM.COM:analyze"}
+    
+    Modify the SPN value for a given computer.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 2 --------------------------
+    
+    C:\PS>Set-AdmComputer "FABRIKAM-SRV1" -Location "NA/HQ/Building A"
+    
+    Modify the location for a given computer.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 3 --------------------------
+    
+    C:\PS>Set-AdmComputer "FABRIKAM-SRV1" -ManagedBy "CN=SQL Administrator 
+    01,OU=UserAccounts,OU=Managed,DC=FABRIKAM,DC=COM"
+    
+    Set the managed by attribute value for a given computer using the SAM account name of the user.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 4 --------------------------
+    
+    C:\PS>$comp = Get-AdmComputer "FABRIKAM-SRV1"; $comp.Location = "NA/HQ/Building A"; $comp.ManagedBy = "CN=SQL 
+    Administrator 01,OU=UserAccounts,OU=Managed,DC=FABRIKAM,DC=COM"; Set-AdmComputer -Instance $comp
+    
+    Set the location and managed-by attributes of a given computer using the instance parameter set.
+    
+    
+    
+    
+    
+RELATED LINKS
+    Get-AdmComputer 
+    New-AdmComputer 
+    Remove-AdmComputer 
+
+
+

@@ -1,0 +1,251 @@
+﻿
+NAME
+    Get-AdmRootDSE
+    
+SYNOPSIS
+    Gets the root of a Directory Server information tree.
+    
+    
+SYNTAX
+    Get-AdmRootDSE [-AdaxesService <string>] [-Credential <PSCredential>] [-Properties <string[]>] [-Server 
+    <string>] [<CommonParameters>]
+    
+    
+DESCRIPTION
+    The Get-AdmRootDSE cmdlet gets the conceptual object representing the root of the directory information tree 
+    of a directory server. This tree provides information about the configuration and capabilities of the 
+    directory server, such as the distinguished name for the configuration container, the current time on the 
+    directory server, and the functional levels of the directory server and the domain.
+    
+
+PARAMETERS
+    -AdaxesService <string>
+        Specifies the DNS name of an Adaxes service that will be used to execute this cmdlet. If this parameter 
+        is not specified, and the cmdlet is running from an Adaxes Active Directory provider drive, the value for 
+        this parameter can be determined from the current path. For example, if the current path is 
+        "Adaxes:/example.com", the Adaxes service on "example.com" will be used. If the parameter is not 
+        specified and the service DNS name can't be determined from the current path, the cmdlet will access 
+        Active Directory directly.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Credential <PSCredential>
+        Specifies the user account credentials to use to perform this task. The default credentials are the 
+        credentials of the currently logged on user unless the cmdlet is run from an Adaxes Active Directory 
+        PowerShell provider drive. If the cmdlet is run from such a provider drive, the account associated with 
+        the drive is the default one.
+        
+        To specify this parameter, you can type a user name, such as "User1" or "Domain01\User01" or you can 
+        specify a PSCredential object. If you specify a user name for this parameter, the cmdlet prompts for a 
+        password.
+        
+        You can also create a PSCredential object by using a script or by using the Get-Credential cmdlet. You 
+        can then set the Credential parameter to the PSCredential object The following example shows how to 
+        create credentials.
+        $AdminCredentials = Get-Credential "Domain01\User01"
+        
+        The following shows how to set the Credential parameter to these credentials.
+        -Credential $AdminCredentials
+        
+        If the acting credentials do not have permission to perform the task, Adaxes Active Directory PowerShell 
+        returns a terminating error.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Properties <string[]>
+        Specifies the properties of the output object to retrieve from the server. Use this parameter to retrieve 
+        properties that are not included in the default set.
+        
+        Specify properties for this parameter as a comma-separated list of names. To display all of the 
+        attributes that are set on the object, specify * (asterisk).
+        
+        To specify an individual extended property, use the name of the property. For properties that are not 
+        default or extended properties, you must specify the LDAP display name of the attribute.
+        
+        To retrieve properties and display them for an object, you can use the Get-* cmdlet associated with the 
+        object and pass the output to the Get-Member cmdlet. The following examples show how to retrieve 
+        properties for a group where the Administrator's group is used as the sample group object.
+        
+        Get-AdmGroup -Identity Administrators | Get-Member
+        
+        To retrieve and display the list of all the properties for an ADGroup object, use the following command:
+        Get-AdmGroup -Identity Administrators -Properties *| Get-Member
+        
+        The following examples show how to use the Properties parameter to retrieve individual properties as well 
+        as the default, extended or complete set of properties.
+        
+        To retrieve the extended properties "OfficePhone" and "Organization" and the default properties of an 
+        ADUser object named "SaraDavis", use the following command:
+        Get-ADUser -Identity SaraDavis -Properties OfficePhone,Organization
+        
+        To retrieve the properties with LDAP display names of "otherTelephone" and "otherMobile", in addition to 
+        the default properties for the same user, use the following command:
+        Get-ADUser -Identity SaraDavis -Properties otherTelephone, otherMobile |Get-Member
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Server <string>
+        Specifies the Active Directory Domain Services instance to connect to, by providing one of the following 
+        values for a corresponding domain name or directory server.
+        Domain name values:
+        Fully qualified domain name
+        Examples: corp.contoso.com
+        NetBIOS name
+        Example: CORP
+        
+        Directory server values:
+        Fully qualified directory server name
+        Example: corp-DC12.corp.contoso.com
+        NetBIOS name
+        Example: corp-DC12
+        Fully qualified directory server name and port
+        Example: corp-DC12.corp.contoso.com:3268
+        
+        The default value for the Server parameter is determined by one of the following methods in the order 
+        that they are listed:
+        -By using Server value from objects passed through the pipeline.
+        -By using the server information associated with the Adaxes Active Directory PowerShell provider drive, 
+        when running under that drive.
+        -By using the domain of the computer running Powershell.
+        
+        The following example shows how to specify a fully qualified domain name as the parameter value.
+        -Server "corp.contoso.com"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer, PipelineVariable, and OutVariable. For more information, see 
+        about_CommonParameters (https:/go.microsoft.com/fwlink/?LinkID=113216). 
+    
+INPUTS
+    None
+        
+    
+    
+OUTPUTS
+    Softerra.Adaxes.PowerShellModule.Directory.ADRootDSE
+        An ADRootDSE object that represents the data tree for the specified directory server is output by this 
+        cmdlet.
+    
+    
+NOTES
+    
+    
+        
+        
+    
+    -------------------------- EXAMPLE 1 --------------------------
+    
+    C:\PS>Get-AdmRootDSE
+    
+    configurationNamingContext    : CN=Configuration,DC=Fabrikam,DC=com
+    currentTime                   : 3/18/2009 11:12:55 AM
+    defaultNamingContext          : DC=Fabrikam,DC=com
+    dnsHostName                   : FABRIKAM-DC1.Fabrikam.com
+    domainControllerFunctionality : Windows2008R2
+    domainFunctionality           : Windows2003Domain
+    dsServiceName                 : CN=NTDS 
+    Settings,CN=FABRIKAM-DC1,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=Fabrikam,DC=com
+    forestFunctionality           : Windows2003Forest
+    highestCommittedUSN           : 23015
+    isGlobalCatalogReady          : {TRUE}
+    isSynchronized                : {TRUE}
+    ldapServiceName               : Fabrikam.com:FABRIKAM-DC1$@FABRIKAM.COM
+    namingContexts                : {DC=Fabrikam,DC=com, CN=Configuration,DC=Fabrikam,DC=com, 
+    CN=Schema,CN=Configuration,DC=Fabrikam,DC=com, DC=DomainDnsZones,DC=Fabrikam,DC=com...}
+    rootDomainNamingContext       : DC=Fabrikam,DC=com
+    schemaNamingContext           : CN=Schema,CN=Configuration,DC=Fabrikam,DC=com
+    serverName                    : 
+    CN=FABRIKAM-DC1,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=Fabrikam,DC=com
+    subschemaSubentry             : CN=Aggregate,CN=Schema,CN=Configuration,DC=Fabrikam,DC=com
+    supportedCapabilities         : {1.2.840.113556.1.4.800 (LDAP_CAP_ACTIVE_DIRECTORY_OID), 
+    1.2.840.113556.1.4.1670 (LDAP_CAP_ACTIVE_DIRECTORY_V51_OID), 1.2.840.113556.1.4.1791 
+    (LDAP_CAP_ACTIVE_DIRECTORY_LDAP_INTEG_OID), 1.2.840.113556.1.4.1935 (LDAP_CAP_ACTIVE_DIRECTORY_V61_OID)...}
+    supportedControl              : {1.2.840.113556.1.4.319 (LDAP_PAGED_RESULT_OID_STRING), 
+    1.2.840.113556.1.4.801 (LDAP_SERVER_SD_FLAGS_OID), 1.2.840.113556.1.4.473 (LDAP_SERVER_SORT_OID), 
+    1.2.840.113556.1.4.528 (LDAP_SERVER_NOTIFICATION_OID)...}
+    supportedLDAPPolicies         : {MaxPoolThreads, MaxDatagramRecv, MaxReceiveBuffer, InitRecvTimeout...}
+    supportedLDAPVersion          : {3, 2}
+    supportedSASLMechanisms       : {GSSAPI, GSS-SPNEGO, EXTERNAL, DIGEST-MD5}
+    
+    
+    
+    Description
+    -----------
+    
+    Get the rooDSE from the default domain controller.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 2 --------------------------
+    
+    C:\PS>Get-AdmRootDSE -Server Fabrikam-RODC1 -Properties supportedExtension
+    
+    configurationNamingContext    : CN=Configuration,DC=Fabrikam,DC=com
+    currentTime                   : 3/18/2009 11:12:55 AM
+    defaultNamingContext          : DC=Fabrikam,DC=com
+    dnsHostName                   : FABRIKAM-RODC1.Fabrikam.com
+    domainControllerFunctionality : Windows2008R2
+    domainFunctionality           : Windows2003Domain
+    dsServiceName                 : CN=NTDS 
+    Settings,CN=FABRIKAM-RODC1,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=Fabrikam,DC=com
+    forestFunctionality           : Windows2003Forest
+    highestCommittedUSN           : 23015
+    isGlobalCatalogReady          : {TRUE}
+    isSynchronized                : {TRUE}
+    ldapServiceName               : Fabrikam.com:FABRIKAM-RODC1$@FABRIKAM.COM
+    namingContexts                : {DC=Fabrikam,DC=com, CN=Configuration,DC=Fabrikam,DC=com, 
+    CN=Schema,CN=Configuration,DC=Fabrikam,DC=com, DC=DomainDnsZones,DC=Fabrikam,DC=com...}
+    rootDomainNamingContext       : DC=Fabrikam,DC=com
+    schemaNamingContext           : CN=Schema,CN=Configuration,DC=Fabrikam,DC=com
+    serverName                    : 
+    CN=FABRIKAM-RODC1,CN=Servers,CN=Default-First-Site-Name,CN=Sites,CN=Configuration,DC=Fabrikam,DC=com
+    subschemaSubentry             : CN=Aggregate,CN=Schema,CN=Configuration,DC=Fabrikam,DC=com
+    supportedCapabilities         : {1.2.840.113556.1.4.800 (LDAP_CAP_ACTIVE_DIRECTORY_OID), 
+    1.2.840.113556.1.4.1670 (LDAP_CAP_ACTIVE_DIRECTORY_V51_OID), 1.2.840.113556.1.4.1791 
+    (LDAP_CAP_ACTIVE_DIRECTORY_LDAP_INTEG_OID), 1.2.840.113556.1.4.1935 (LDAP_CAP_ACTIVE_DIRECTORY_V61_OID)...}
+    supportedControl              : {1.2.840.113556.1.4.319 (LDAP_PAGED_RESULT_OID_STRING), 
+    1.2.840.113556.1.4.801 (LDAP_SERVER_SD_FLAGS_OID), 1.2.840.113556.1.4.473 (LDAP_SERVER_SORT_OID), 
+    1.2.840.113556.1.4.528 (LDAP_SERVER_NOTIFICATION_OID)...}
+    supportedExtension            : {1.3.6.1.4.1.1466.20037, 1.3.6.1.4.1.1466.101.119.1, 1.2.840.113556.1.4.1781, 
+    1.3.6.1.4.1.4203.1.11.3}
+    supportedLDAPPolicies         : {MaxPoolThreads, MaxDatagramRecv, MaxReceiveBuffer, InitRecvTimeout...}
+    supportedLDAPVersion          : {3, 2}
+    supportedSASLMechanisms       : {GSSAPI, GSS-SPNEGO, EXTERNAL, DIGEST-MD5}
+    
+    
+    
+    Description
+    -----------
+    
+    Get the rootDSE information including the supportedExtension property for Fabrikam-RODC1 server.
+    
+    
+    
+    
+    
+    
+RELATED LINKS
+
+
+

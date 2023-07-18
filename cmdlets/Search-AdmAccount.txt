@@ -1,0 +1,658 @@
+﻿
+NAME
+    Search-AdmAccount
+    
+SYNOPSIS
+    Gets an Active Directory user or computer.
+    
+    
+SYNTAX
+    Search-AdmAccount -AccountDisabled <switch> [-AdaxesService <string>] [-ComputersOnly <switch>] [-Credential 
+    <PSCredential>] [-ResultPageSize <int>] [-ResultSetSize <System.Nullable[int]>] [-SearchBase <string>] 
+    [-SearchScope {Base | OneLevel | Subtree}] [-Server <string>] [-UsersOnly <switch>] [<CommonParameters>]
+    
+    Search-AdmAccount -AccountExpired <switch> [-AdaxesService <string>] [-ComputersOnly <switch>] [-Credential 
+    <PSCredential>] [-ResultPageSize <int>] [-ResultSetSize <System.Nullable[int]>] [-SearchBase <string>] 
+    [-SearchScope {Base | OneLevel | Subtree}] [-Server <string>] [-UsersOnly <switch>] [<CommonParameters>]
+    
+    Search-AdmAccount -AccountExpiring <switch> [-DateTime <DateTime>] [-TimeSpan <TimeSpan>] [-AdaxesService 
+    <string>] [-ComputersOnly <switch>] [-Credential <PSCredential>] [-ResultPageSize <int>] [-ResultSetSize 
+    <System.Nullable[int]>] [-SearchBase <string>] [-SearchScope {Base | OneLevel | Subtree}] [-Server <string>] 
+    [-UsersOnly <switch>] [<CommonParameters>]
+    
+    Search-AdmAccount -AccountInactive <switch> [-DateTime <DateTime>] [-TimeSpan <TimeSpan>] [-AdaxesService 
+    <string>] [-ComputersOnly <switch>] [-Credential <PSCredential>] [-ResultPageSize <int>] [-ResultSetSize 
+    <System.Nullable[int]>] [-SearchBase <string>] [-SearchScope {Base | OneLevel | Subtree}] [-Server <string>] 
+    [-UsersOnly <switch>] [<CommonParameters>]
+    
+    Search-AdmAccount -LockedOut [-AdaxesService <string>] [-ComputersOnly <switch>] [-Credential <PSCredential>] 
+    [-ResultPageSize <int>] [-ResultSetSize <System.Nullable[int]>] [-SearchBase <string>] [-SearchScope {Base | 
+    OneLevel | Subtree}] [-Server <string>] [-UsersOnly <switch>] [<CommonParameters>]
+    
+    Search-AdmAccount -PasswordExpired <switch> [-AdaxesService <string>] [-ComputersOnly <switch>] [-Credential 
+    <PSCredential>] [-ResultPageSize <int>] [-ResultSetSize <System.Nullable[int]>] [-SearchBase <string>] 
+    [-SearchScope {Base | OneLevel | Subtree}] [-Server <string>] [-UsersOnly <switch>] [<CommonParameters>]
+    
+    Search-AdmAccount -PasswordNeverExpires <switch> [-AdaxesService <string>] [-ComputersOnly <switch>] 
+    [-Credential <PSCredential>] [-ResultPageSize <int>] [-ResultSetSize <System.Nullable[int]>] [-SearchBase 
+    <string>] [-SearchScope {Base | OneLevel | Subtree}] [-Server <string>] [-UsersOnly <switch>] 
+    [<CommonParameters>]
+    
+    
+DESCRIPTION
+    The Search-AdmAccount cmdlet retrieves one or more user or computers that meet the criteria specified by the 
+    parameters. Search criteria include account and password status. For example, you can search for all accounts 
+    that have expired by specifying the AccountExpired parameter. Similarly, you can search for all accounts with 
+    an expired password by specifying the PasswordExpired parameter. You can limit the search to user accounts by 
+    specifying the UsersOnly parameter. Similarly, when you specify the ComputersOnly parameter, the cmdlet only 
+    retrieves computer accounts.
+    
+    Some search parameters, such as AccountExpiring and AccountInactive use a default time that you can change by 
+    specifying the DateTime or TimeSpan parameter. The DateTime parameter specifies a distinct time. The TimeSpan 
+    parameter specifies a time range from the current time. For example, to search for all accounts that expire 
+    in 10 days, specify the AccountExpiring and TimeSpan parameter and set the value of TimeSpan to 
+    "10.00:00:00". To search for all accounts that expire before December 31, 2012, set the DateTime parameter to 
+    "12/31/2012".
+    
+
+PARAMETERS
+    -AccountDisabled <switch>
+        Specifies a search for accounts that are disabled. An account is disabled when the ADAccount Enabled 
+        property is set to false.
+        
+        The following example shows how to specify the AccountDisabled parameter.
+        -AccountDisabled
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -AccountExpired <switch>
+        Specifies a search for accounts that are expired. An account is expired when the ADAccount 
+        AccountExpirationDate property is set to a time in the past. The LDAP Display Name (ldapDisplayName) for 
+        the AccountExpirationDate property is accountExpires.
+        
+        The following example shows how to specify the AccountExpired parameter.
+        -AccountExpired
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -AccountExpiring <switch>
+        Specifies a search for accounts that are expiring in a given time period or by a specified time. To 
+        specify a time period, use the AccountExpiring parameter with the TimeSpan parameter. To specify a 
+        specific time, use the AccountExpiring parameter with the DateTime parameter.
+        
+        The following example shows how to specify a search for accounts that expire in the next 10 days.
+        -AccountExpiring -TimeSpan 10
+        
+        The following example shows how to specify a search for accounts that expire before June 18, 2012 at 2:00 
+        AM.
+        -AccountExpiring -DateTime "6/18/2012 2:00:00 AM"
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -AccountInactive <switch>
+        Specifies to search for accounts that have not logged in within a given time period or since a specified 
+        time. To specify a time period, use the TimeSpan parameter. To specify a specific time, use the DateTime 
+        parameter. Note that this attribute is only used when the domain is in Windows Server 2003 Domain 
+        Functional Level, so this parameter will only work in that mode.
+        
+        The following example shows how to set this parameter to search for accounts that have been inactive for 
+        the past 10 days.
+        -AccountInactive -TimeSpan 10
+        
+        The following example shows how to set this parameter to search for accounts that have been inactive 
+        since July 16, 2008 at 12:00 AM.
+        -AccountInactive  -DateTime "7/16/2008"
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -AdaxesService <string>
+        Specifies the DNS name of an Adaxes service that will be used to execute this cmdlet. If this parameter 
+        is not specified, and the cmdlet is running from an Adaxes Active Directory provider drive, the value for 
+        this parameter can be determined from the current path. For example, if the current path is 
+        "Adaxes:/example.com", the Adaxes service on "example.com" will be used. If the parameter is not 
+        specified and the service DNS name can't be determined from the current path, the cmdlet will access 
+        Active Directory directly.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ComputersOnly <switch>
+        Specifies a search of only computer accounts.
+        
+        The following example shows how to specify this parameter.
+        -ComputersOnly
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Credential <PSCredential>
+        Specifies the user account credentials to use to perform this task. The default credentials are the 
+        credentials of the currently logged on user unless the cmdlet is run from an Adaxes Active Directory 
+        PowerShell provider drive. If the cmdlet is run from such a provider drive, the account associated with 
+        the drive is the default one.
+        
+        To specify this parameter, you can type a user name, such as "User1" or "Domain01\User01" or you can 
+        specify a PSCredential object. If you specify a user name for this parameter, the cmdlet prompts for a 
+        password.
+        
+        You can also create a PSCredential object by using a script or by using the Get-Credential cmdlet. You 
+        can then set the Credential parameter to the PSCredential object The following example shows how to 
+        create credentials.
+        $AdminCredentials = Get-Credential "Domain01\User01"
+        
+        The following shows how to set the Credential parameter to these credentials.
+        -Credential $AdminCredentials
+        
+        If the acting credentials do not have permission to perform the task, Adaxes Active Directory PowerShell 
+        returns a terminating error.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -DateTime <DateTime>
+        Specifies a distinct time value for Search-AdmAccount parameters such as AccountExpiring, 
+        AccountInactive, and PasswordExpiring.
+        
+        Time is assumed to be local time unless otherwise specified. When a time value is not specified, the time 
+        is assumed to be midnight local time. When a date is not specified, the date is assumed to be the current 
+        date. The following examples show commonly-used syntax to specify a DateTime object.
+        "4/17/2006"
+        "Monday, April 17, 2006"
+        "2:22:45 PM"
+        "Monday, April 17, 2006 2:22:45 PM"
+        
+        These examples specify the same date and time without the seconds.
+        "4/17/2006 2:22 PM"
+        "Monday, April 17, 2006 2:22 PM"
+        "2:22 PM"
+        
+        The following example shows how to specify a date and time by using the RFC1123 standard. This example 
+        defines time by using Greenwich Mean Time (GMT).
+        "Mon, 17 Apr 2006 21:22:48 GMT"
+        
+        The following example shows how to specify a value as Coordinated Universal Time (UTC). This example 
+        represents Monday, April 17, 2006 at 2:22:48 PM UTC.
+        "2000-04-17T14:22:48.0000000"
+        
+        The following example shows how to set the AccountExpiring parameter to a DateTime value of June 18, 2012 
+        at 2:00:00 AM.
+        
+        -AccountExpiring -DateTime "6/18/2012 2:00:00 AM"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -LockedOut [<SwitchParameter>]
+        Specifies a search for accounts that are locked out.
+        
+        The following example shows how to specify a search for accounts that are locked out.
+        -LockedOut
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -PasswordExpired <switch>
+        Specifies a search for accounts that have an expired password.
+        
+        The following example shows how to specify this parameter.
+        -PasswordExpired
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -PasswordNeverExpires <switch>
+        Specifies a search for accounts that have a password that does not expire.
+        
+        The following example shows how to specify the PasswordNeverExpires parameter.
+        -PasswordNeverExpires
+        
+        Required?                    true
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ResultPageSize <int>
+        Specifies the number of objects to include in one page for an Active Directory Domain Services query.
+        
+        The default is 256 objects per page.
+        
+        The following example shows how to set this parameter.
+        -ResultPageSize 500
+        
+        Required?                    false
+        Position?                    named
+        Default value                256
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ResultSetSize <System.Nullable[int]>
+        Specifies the maximum number of objects to return for an Active Directory Domain Services query. If you 
+        want to receive all of the objects, set this parameter to $null (null value). You can use Ctrl+c to stop 
+        the query and return the objects.
+        The default is $null.
+        The following example shows how to set this parameter so that you receive all of the returned objects.
+        -ResultSetSize $null
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -SearchBase <string>
+        Specifies an Active Directory path to search under.
+        
+        When you run a cmdlet from an Adaxes Active Directory provider drive, the default value of this parameter 
+        is the current path of the drive.
+        
+        When you run a cmdlet outside of an Adaxes Active Directory provider drive, the default value of this 
+        parameter is the default naming context of the target domain.
+        
+        The following example shows how to set this parameter to search under an OU.
+        -SearchBase "ou=mfg,dc=noam,dc=corp,dc=contoso,dc=com"
+        
+        When the value of the SearchBase parameter is set to an empty string and you are connected to a GC port, 
+        all partitions will be searched. If the value of the SearchBase parameter is set to an empty string and 
+        you are not connected to a GC port, an error will be thrown.
+        The following example shows how to set this parameter to an empty string.   -SearchBase ""
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -SearchScope <ADSearchScope>
+        Specifies the scope of an Active Directory search. Possible values for this parameter are:
+        Base or 0
+        OneLevel or 1
+        Subtree or 2
+        
+        A Base query searches only the current path or object. A OneLevel query searches the immediate children 
+        of that path or object. A Subtree query searches the current path or object and all children of that path 
+        or object.
+        
+        The following example shows how to set this parameter to a subtree search.
+        -SearchScope Subtree
+        
+        The following lists the acceptable values for this parameter:
+        
+        Base
+            
+        
+        OneLevel
+            
+        
+        Subtree
+            
+        
+        Required?                    false
+        Position?                    named
+        Default value                Subtree
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Server <string>
+        Specifies the Active Directory Domain Services instance to connect to, by providing one of the following 
+        values for a corresponding domain name or directory server.
+        Domain name values:
+        Fully qualified domain name
+        Examples: corp.contoso.com
+        NetBIOS name
+        Example: CORP
+        
+        Directory server values:
+        Fully qualified directory server name
+        Example: corp-DC12.corp.contoso.com
+        NetBIOS name
+        Example: corp-DC12
+        Fully qualified directory server name and port
+        Example: corp-DC12.corp.contoso.com:3268
+        
+        The default value for the Server parameter is determined by one of the following methods in the order 
+        that they are listed:
+        -By using Server value from objects passed through the pipeline.
+        -By using the server information associated with the Adaxes Active Directory PowerShell provider drive, 
+        when running under that drive.
+        -By using the domain of the computer running Powershell.
+        
+        The following example shows how to specify a fully qualified domain name as the parameter value.
+        -Server "corp.contoso.com"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -TimeSpan <TimeSpan>
+        Sets a time interval. This parameter is used to specify a time value for Search-AdmAccount parameters 
+        such as AccountExpiring.
+        
+        Specify the time interval in the following format.
+        [-]D.H:M:S.F
+        where:
+        D = Days (0 to 10675199)
+        H = Hours (0 to 23)
+        M = Minutes (0 to 59)
+        S = Seconds (0 to 59)
+        F= Fractions of a second (0 to 9999999)
+        
+        Note: Time values must be between the following values: -10675199:02:48:05.4775808 and 
+        10675199:02:48:05.4775807.
+        
+        The following examples show how to set this parameter.
+        Set the time to 2 days
+        -TimeSpan "2"
+        Set the time span to the previous 2 days
+        -TimeSpan "-2"
+        Set the time to 4 hours
+        -TimeSpan "4:00"
+        
+        For example, to search for all accounts that are expiring in 10 days, specify the AccountExpiring and 
+        TimeSpan parameters as follows.
+        
+        -AccountExpiring -TimeSpan "10"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -UsersOnly <switch>
+        Specifies a search for user accounts only.
+        
+        The following example shows how to specify this parameter.
+        -UsersOnly
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer, PipelineVariable, and OutVariable. For more information, see 
+        about_CommonParameters (https:/go.microsoft.com/fwlink/?LinkID=113216). 
+    
+INPUTS
+    None
+        
+    
+    
+OUTPUTS
+    Softerra.Adaxes.PowerShellModule.Directory.ADAccount
+        Returns one or more account objects that meet the conditions set by the parameters.
+    
+    
+NOTES
+    
+    
+        
+        
+    
+    -------------------------- EXAMPLE 1 --------------------------
+    
+    C:\PS>Search-AdmAccount -AccountDisabled | FT Name,ObjectClass -A
+    
+    Name            ObjectClass
+    ----            -----------
+    Guest           user
+    krbtgt          user
+    krbtgt_51399    user
+    AmyAl-LPTOP     computer
+    DeepakAn-DSKTOP computer
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all users, computers and service accounts that are disabled.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 2 --------------------------
+    
+    C:\PS>Search-AdmAccount -AccountDisabled -UsersOnly | FT Name,ObjectClass -A
+    
+    Name         ObjectClass
+    ----         -----------
+    Guest        user
+    krbtgt       user
+    krbtgt_51399 user
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all users that are disabled.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 3 --------------------------
+    
+    C:\PS>Search-AdmAccount -AccountExpired | FT Name,ObjectClass -A
+    
+    Name            ObjectClass
+    ----            -----------
+    Greg Chapman    user
+    Claus Hansen    user
+    Tomasz Bochenek user
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all users, computers and service accounts that are expired.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 4 --------------------------
+    
+    C:\PS>Search-AdmAccount -AccountExpiring -TimeSpan 6.00:00:00 | FT Name,ObjectClass -A
+    
+    Name           ObjectClass
+    ----           -----------
+    Iulian Calinov user
+    John Campbell  user
+    Garth Fort     user
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all users, computers and service accounts that will expire in the next 6 days.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 5 --------------------------
+    
+    C:\PS>Search-AdmAccount -AccountInactive -TimeSpan 90.00:00:00 | FT Name,ObjectClass -A
+    
+    Name                        ObjectClass
+    ----                        -----------
+    FABRIKAM-RODC1              computer
+    Guest                       user
+    krbtgt                      user
+    krbtgt_51399                user
+    Almudena Benito             user
+    Aaron Con                   user
+    Adina Hagege                user
+    Aaron Nicholls              user
+    Aaron M. Painter            user
+    Jeff Phillips               user
+    Flemming Pedersen           use
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all accounts that have been inactive for the last 90 days.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 6 --------------------------
+    
+    C:\PS>Search-AdmAccount -PasswordExpired | FT Name,ObjectClass -A
+    
+    Name                        ObjectClass
+    ----                        -----------
+    Stan Orme                   user
+    Danni Ortman                user
+    Matej Potokar               user
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all accounts where the password has expired.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 7 --------------------------
+    
+    C:\PS>Search-AdmAccount -PasswordNeverExpires | FT Name,ObjectClass -A
+    
+    Name           ObjectClass
+    ----           -----------
+    Guest          user
+    Toni Poe       user
+    Anders Riis    user
+    Fabien Hernoux user
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all accounts with a password that will never expire.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 8 --------------------------
+    
+    C:\PS>Search-AdmAccount -LockedOut | FT Name,ObjectClass -A
+    
+    Name           ObjectClass
+    ----           -----------
+    Toni Poe       user
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all accounts that have been locked out.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 9 --------------------------
+    
+    C:\PS>Search-AdmAccount -AccountDisabled -ComputersOnly | FT Name,ObjectClass -A
+    
+    Name           ObjectClass
+    ----           -----------
+    TPOE-PC1       computer
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all disabled computer accounts.
+    
+    
+    
+    
+    
+    -------------------------- EXAMPLE 10 --------------------------
+    
+    C:\PS>Search-AdmAccount -AccountExpiring -DateTime "3/18/2009" | FT Name,ObjectClass -A
+    
+    Name         ObjectClass
+    ----         -----------
+    Anders Riis  user
+    
+    
+    
+    Description
+    -----------
+    
+    Returns all accounts which expire on the 18th of March, 2009.
+    
+    
+    
+    
+    
+    
+RELATED LINKS
+    Enable-AdmAccount 
+    Disable-AdmAccount 
+    Unlock-AdmAccount 
+    Set-AdmAccountControl 
+    Set-AdmAccountExpiration 
+    Clear-AdmAccountExpiration 
+    Set-AdmAccountPassword 
+
+
+

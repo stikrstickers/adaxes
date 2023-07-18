@@ -1,0 +1,444 @@
+﻿
+NAME
+    New-AdmOrganizationalUnit
+    
+SYNOPSIS
+    Creates a new Active Directory organizational unit.
+    
+    
+SYNTAX
+    New-AdmOrganizationalUnit [[-Name] <string>] [-AdaxesService <string>] [-City <string>] [-Country <string>] 
+    [-Credential <PSCredential>] [-Description <string>] [-DisplayName <string>] [-Instance 
+    <ADOrganizationalUnit>] [-ManagedBy <Object>] [-OtherAttributes <hashtable>] 
+    [-ProtectedFromAccidentalDeletion <System.Nullable[bool]>] [-PassThru <switch>] [-Path <string>] [-PostalCode 
+    <string>] [-Server <string>] [-State <string>] [-StreetAddress <string>] [-Confirm] [-WhatIf] 
+    [<CommonParameters>]
+    
+    
+DESCRIPTION
+    The New-AdmOrganizationalUnit cmdlet creates a new Active Directory organizational unit. You can set commonly 
+    used organizational unit property values by using the cmdlet parameters. Property values that are not 
+    associated with cmdlet parameters can be set by using the OtherAttributes parameter.
+    
+    You must set the Name parameter to create a new organizational unit. When you do not specify the Path 
+    parameter, the cmdlet creates an organizational unit under the default NC head for the domain.
+    The following methods explain different ways to create an object by using this cmdlet.
+    Method 1: Use the New-AdmOrganizationalUnit cmdlet, specify the required parameters, and set any additional 
+    property values by using the cmdlet parameters.
+    Method 2: Use a template to create the new object. To do this, create a new organizational unit object or 
+    retrieve a copy of an existing organizational unit object and set the Instance parameter to this object. The 
+    object provided to the Instance parameter is used as a template for the new object. You can override property 
+    values from the template by setting cmdlet parameters. For examples and more information, see the Instance 
+    parameter description for this cmdlet.
+    Method 3: Use the Import-CSV cmdlet with the New-AdmOrganizationalUnit cmdlet to create multiple Active 
+    Directory organizational unit objects. To do this, use the Import-CSV cmdlet to create the custom objects 
+    from a comma-separated value (CSV) file that contains a list of object properties. Then pass these objects 
+    through the pipeline to the New-AdmOrganizationalUnit cmdlet to create the organizational unit objects.
+    
+
+PARAMETERS
+    -AdaxesService <string>
+        Specifies the DNS name of an Adaxes service that will be used to execute this cmdlet. If this parameter 
+        is not specified, and the cmdlet is running from an Adaxes Active Directory provider drive, the value for 
+        this parameter can be determined from the current path. For example, if the current path is 
+        "Adaxes:/example.com", the Adaxes service on "example.com" will be used. If the parameter is not 
+        specified and the service DNS name can't be determined from the current path, the cmdlet will access 
+        Active Directory directly.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -City <string>
+        Specifies the town or city for the organizational unit. This parameter sets the City property of an 
+        organizational unit object. The LDAP display name (ldapDisplayName) of this property is "l".
+        
+        The following example shows how to set this parameter.
+        -City "Las Vegas"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -Country <string>
+        Specifies the country or region code for the organizational unit. This parameter sets the Country 
+        property of an organizational unit object. The LDAP Display Name (ldapDisplayName) of this property is 
+        "c". This value is not used by Windows 2000.
+        
+        The following example shows how to set this parameter.
+        -Country "IN"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -Credential <PSCredential>
+        Specifies the user account credentials to use to perform this task. The default credentials are the 
+        credentials of the currently logged on user unless the cmdlet is run from an Adaxes Active Directory 
+        PowerShell provider drive. If the cmdlet is run from such a provider drive, the account associated with 
+        the drive is the default one.
+        
+        To specify this parameter, you can type a user name, such as "User1" or "Domain01\User01" or you can 
+        specify a PSCredential object. If you specify a user name for this parameter, the cmdlet prompts for a 
+        password.
+        
+        You can also create a PSCredential object by using a script or by using the Get-Credential cmdlet. You 
+        can then set the Credential parameter to the PSCredential object The following example shows how to 
+        create credentials.
+        $AdminCredentials = Get-Credential "Domain01\User01"
+        
+        The following shows how to set the Credential parameter to these credentials.
+        -Credential $AdminCredentials
+        
+        If the acting credentials do not have permission to perform the task, Adaxes Active Directory PowerShell 
+        returns a terminating error.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Description <string>
+        Specifies a description of the object. This parameter sets the value of the Description property for the 
+        object. The LDAP Display Name (ldapDisplayName) for this property is "description".
+        
+        The following example shows how to set this parameter to a sample description.
+        -Description "Description of the object"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -DisplayName <string>
+        Specifies the display name of the object. This parameter sets the DisplayName property of the object. The 
+        LDAP Display Name (ldapDisplayName) for this property is "displayName".
+        
+        The following example shows how to set this parameter.
+        -DisplayName "Sara Davis Laptop"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -Instance <ADOrganizationalUnit>
+        Specifies an instance of an organizational unit object to use as a template for a new organizational unit 
+        object.
+        
+        You can use an instance of an existing organizational unit object as a template or you can construct a 
+        new organizational unit object by using the Windows PowerShell command line or by using a script. The 
+        following examples show how to use these two methods to create organizational unit object templates.
+        
+        Method 1: Use an existing organizational unit object as a template for a new object. To retrieve an 
+        instance of an existing organizational unit object, use Get-AdmOrganizationalUnit. Then provide this 
+        object to the Instance parameter of the New-AdmOrganizationalUnit cmdlet to create a new organizational 
+        unit object. You can override property values of the new object by setting the appropriate parameters.
+        
+        $organizationalUnitInstance = Get-AdmOrganizationalUnit -Identity accountingAsia
+        New-AdmOrganizationalUnit -Name accountingAustralia  -Instance $OrganizationalUnitInstance -Country 
+        Australia
+        
+        Method 2: Create a new ADOrganizationalUnit object and set the property values by using the Windows 
+        PowerShell command line interface. Then pass this object to the Instance parameter of the 
+        New-AdmOrganizationalUnit cmdlet to create the new Active Directory organizational unit object.
+        
+        $OrganizationalUnitInstance = new-object Softerra.Adaxes.PowerShellModule.Directory.ADOrganizationalUnit
+        $OrganizationalUnitInstance.Country = Australia
+        New-AdmOrganizationalUnit -Name accountingAustralia  -Instance $OrganizationalUnitInstance
+        
+        Note: Specified attributes are not validated, so attempting to set attributes that do not exist or cannot 
+        be set will raise an error.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -ManagedBy <Object>
+        Specifies the user or group that manages the object by providing one of the following property values. 
+        Note: The identifier in parentheses is the LDAP display name for the property.
+        Distinguished Name
+        Example:  CN=SaraDavis,OU=Europe,CN=Users,DC=corp,DC=contoso,DC=com
+        GUID (objectGUID)
+        Example: 599c3d2e-f72d-4d20-8a88-030d99495f20
+        Security Identifier (objectSid)
+        Example: S-1-5-21-3165297888-301567370-576410423-1103
+        SAM Account Name (sAMAccountName)
+        Example: saradavis
+        
+        This parameter sets the Active Directory attribute with an LDAP Display Name of "managedBy".
+        
+        The following example shows how to specify this parameter.
+        -ManagedBy ContosoAdmins
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -Name <string>
+        Specifies the name of the object. This parameter sets the Name property of the Active Directory object. 
+        The LDAP Display Name (ldapDisplayName) of this property is "name".
+        
+        The following example shows how to set this parameter to a name string.
+        -Name "SaraDavis"
+        
+        Required?                    false
+        Position?                    1
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -OtherAttributes <hashtable>
+        Specifies object attribute values for attributes that are not represented by cmdlet parameters. You can 
+        set one or more parameters at the same time with this parameter. If an attribute takes more than one 
+        value, you can assign multiple values. To identify an attribute, specify the LDAPDisplayName 
+        (ldapDisplayName) defined for it in the Active Directory schema.
+        
+        Syntax:
+        To specify a single value for an attribute:
+        -OtherAttributes @{'AttributeLDAPDisplayName'=value}
+        To specify multiple values for an attribute
+        -OtherAttributes @{'AttributeLDAPDisplayName'=value1,value2,...}
+        
+        You can specify values for more than one attribute by using semicolons to separate attributes.  The 
+        following syntax shows how to set values for multiple attributes:
+        -OtherAttributes @{'Attribute1LDAPDisplayName'=value; 'Attribute2LDAPDisplayName'=value1,value2;...}
+        
+        The following examples show how to use this parameter.
+        
+        To set the value of a custom attribute called favColors that takes a set of Unicode strings, use the 
+        following syntax:
+        -OtherAttributes @{'favColors'="pink","purple"}
+        
+        To set values for favColors and dateOfBirth simultaneously, use the following syntax:
+        -OtherAttributes @{'favColors'="pink","purple"; 'dateOfBirth'=" 01/01/1960"}
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -PassThru <switch>
+        Returns the new or modified object. By default (i.e. if -PassThru is not specified), this cmdlet does not 
+        generate any output.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -Path <string>
+        Specifies the X.500 path of the Organizational Unit (OU) or container where the new object is created.
+        
+        In many cases, a default value will be used for the Path parameter if no value is specified.  The rules 
+        for determining the default value are given below.  Note that rules listed first are evaluated first, and 
+        once a default value can be determined, no further rules will be evaluated.
+        
+        A default value for Path will be set in the following cases:
+        - If the cmdlet is run from an Adaxes Active Directory PowerShell provider drive, the parameter is set to 
+        the current path of the provider drive.
+        - If the cmdlet has a default path, this will be used.  For example: in New-AdmUser, the Path parameter 
+        would default to the Users container.
+        -  If none of the previous cases apply, the default value of Path will be set to the default partition or 
+        naming context of the target domain.
+        
+        The following example shows how to set this parameter to an OU.
+        
+        -Path "ou=mfg,dc=noam,dc=corp,dc=contoso,dc=com"
+        
+        Note:  the Adaxes Active Directory provider cmdlets, such as New-Item, Remove-Item, Remove-ItemProperty, 
+        Rename-Item and Set-ItemProperty, also contain a Path property. However, for the provider cmdlets, the 
+        Path parameter identifies the path of the actual object and not the container as with the Active 
+        Directory cmdlets.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -PostalCode <string>
+        Specifies the postal code or zip code for the organizational unit. This parameter sets the PostalCode 
+        property of an organizational unit object. The LDAP Display Name (ldapDisplayName) of this property is 
+        "postalCode".
+        
+        The following example shows how to set this parameter.
+        -PostalCode "28712"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -ProtectedFromAccidentalDeletion <System.Nullable[bool]>
+        Specifies whether to prevent the object from being deleted. When this property is set to true, you cannot 
+        delete the corresponding object without changing the value of the property. Possible values for this 
+        parameter include:
+            $false or 0
+            $true or 1
+        
+            The following example shows how to set this parameter to true.
+            -ProtectedFromAccidentalDeletion $true
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -Server <string>
+        Specifies the Active Directory Domain Services instance to connect to, by providing one of the following 
+        values for a corresponding domain name or directory server.
+        Domain name values:
+        Fully qualified domain name
+        Examples: corp.contoso.com
+        NetBIOS name
+        Example: CORP
+        
+        Directory server values:
+        Fully qualified directory server name
+        Example: corp-DC12.corp.contoso.com
+        NetBIOS name
+        Example: corp-DC12
+        Fully qualified directory server name and port
+        Example: corp-DC12.corp.contoso.com:3268
+        
+        The default value for the Server parameter is determined by one of the following methods in the order 
+        that they are listed:
+        -By using Server value from objects passed through the pipeline.
+        -By using the server information associated with the Adaxes Active Directory PowerShell provider drive, 
+        when running under that drive.
+        -By using the domain of the computer running Powershell.
+        
+        The following example shows how to specify a fully qualified domain name as the parameter value.
+        -Server "corp.contoso.com"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -State <string>
+        Specifies the user's or Organizational Unit's state or province. This parameter sets the State property 
+        of a User or Organizational Unit object. The LDAP display name (ldapDisplayName) of this property is "st".
+        
+        The following example shows how to set this parameter.
+        -State  "Nevada"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -StreetAddress <string>
+        Specifies the organizational unit's street address. This parameter sets the StreetAddress property of a 
+        organizational unit object. The LDAP display name (ldapDisplayName) of this property is "street".
+        
+        The following example shows how to set this parameter.
+        -StreetAddress  "1200 Main Street"
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       true (ByPropertyName)
+        Accept wildcard characters?  false
+        
+    -Confirm [<SwitchParameter>]
+        Prompts you for confirmation before executing the command.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    -WhatIf [<SwitchParameter>]
+        Describes what would happen if you executed the command without actually executing the command.
+        
+        Required?                    false
+        Position?                    named
+        Default value                
+        Accept pipeline input?       false
+        Accept wildcard characters?  false
+        
+    <CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer, PipelineVariable, and OutVariable. For more information, see 
+        about_CommonParameters (https:/go.microsoft.com/fwlink/?LinkID=113216). 
+    
+INPUTS
+    None or Softerra.Adaxes.PowerShellModule.Directory.ADOrganizationalUnit
+        An organizational unit object that is a template for the new organizational unit object is received by 
+        the Instance parameter.
+    
+    
+OUTPUTS
+    None or Softerra.Adaxes.PowerShellModule.Directory.ADOrganizationalUnit
+        Returns the new organizational unit object when the PassThru parameter is specified. By default, this 
+        cmdlet does not generate any output.
+    
+    
+NOTES
+    
+    
+        
+        
+    
+    -------------------------- EXAMPLE 1 --------------------------
+    
+    C:\PS>New-AdmOrganizationalUnit -Name UserAccounts -Path "DC=FABRIKAM,DC=COM"
+    
+    Creates a new OrganizationalUnit named 'UserAccounts' which is protected from accidental deletion.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 2 --------------------------
+    
+    C:\PS>New-AdmOrganizationalUnit -Name UserAccounts -Path "DC=FABRIKAM,DC=COM" -OtherAttributes @{seeAlso="CN=H
+    umanResourceManagers,OU=Groups,OU=Managed,DC=Fabrikam,DC=com";managedBy="CN=TomC,DC=FABRIKAM,DC=COM"}
+    
+    Creates an OrganizationalUnit name 'UserAccounts' which is protected from accidental deletion with properties 
+    'seeAlso' and 'managedBy' set to the specified values.
+    
+    
+    
+    
+    -------------------------- EXAMPLE 3 --------------------------
+    
+    C:\PS>$ouTemplate = Get-AdmOrganizationalUnit "OU=UserAccounts,DC=Fabrikam,DC=com" -properties 
+    seeAlso,managedBy; New-AdmOrganizationalUnit -name TomCReports -instance $ouTemplate
+    
+    Uses the data from the OrganizationalUnit 'OU=UserAccounts,DC=Fabrikam,DC=com' as a template for another new 
+    OrganizationalUnit.
+    
+    
+    
+    
+    
+RELATED LINKS
+    Get-AdmOrganizationalUnit 
+    Set-AdmOrganizationalUnit 
+    Remove-AdmOrganizationalUnit 
+
+
+
