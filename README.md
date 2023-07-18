@@ -1,5 +1,3 @@
-# Welcome to GitHub Desktop!
+# Tired of searching for Adaxes Cmdlets!?
 
-This is your README. READMEs are where you can communicate what your project is and how to use it.
-
-Write your name on line 6, save it, and then head back to GitHub Desktop.
+This is just a list I made of all the Adaxes Cmdlets and the Get-Help for each one. I will dump some sample scripts that we've made but Adaxes has a create Script repository on their page: https://www.adaxes.com/script-repository.htm
